@@ -25,4 +25,3 @@
 (fly input 3 1)
 
 (* (fly input 1 1) (fly input 3 1) (fly input 5 1) (fly input 7 1) (fly input 1 2))
-
