@@ -1,11 +1,9 @@
-(ns aoc-2020-2
+(ns aoc-2020-3
   (:require [clojure.string :as str]))
+
 (def input (str/split (slurp "resources/input-3") #"\n"))
 (defn tree? [character]
-  (if (= character \#)
-    true
-    false))
-(get (get input 0) 37)
+  (= character \#))
 
 (defn fly
   ([input d-x d-y]
