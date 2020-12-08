@@ -1,7 +1,7 @@
 (ns aoc-2020-8
   (:require [clojure.string :as str]))
 
-(def input (str/split (slurp "resources/input-8") #"\n"))
+(def input (str/split (slurp "resources/bb-8-l") #"\n"))
 
 (defn parse-line [line]
   (let [split-line (str/split line #" ")
@@ -40,17 +40,12 @@
            indices-seen (conj indices-seen index)]
        (boot input index acc indices-seen jumps nops)))))
 
-(boot input)
-
+(time (:acc (boot input)))
 
 (defn flip-instruction [instruction]
   (if (= (first (str/split instruction #" ")) "jmp")
     (str/replace instruction #"jmp" "nop")
     (str/replace instruction #"nop" "jmp")))
-
-(map flip-instruction input)
-(def flips (conj (:jumps (boot input) (:nops (boot input)))))
-(map #(flip-instruction (get input %)) flips)
 
 (defn unloop
  ([input]
@@ -65,4 +60,4 @@
        (:acc test)
        (unloop input (rest to-flip))))))
 
-(unloop input)
+(time (unloop input))

@@ -1,7 +1,7 @@
 (ns aoc-2020-7
   (:require [clojure.string :as str]))
 
-(def input (str/split (slurp "resources/input-7") #"\n"))
+(def input (str/split (slurp "resources/bb-7") #"\n"))
 
 (defn input-build-contents [string]
   (let [no-trail (str/join (butlast string))
@@ -39,7 +39,8 @@
                (reduce into (map (fn [x] (find-contained bag-map x))
                                   keys-current)))))))
 
-(count (distinct (recursive-find-contained (build-map input) :shinygold)))
+(time (build-map input))
+(time (count (distinct (recursive-find-contained (build-map input) :shinygold))))
 
 ;; part 2
 (defn build-contents [bag-map search-key number]
