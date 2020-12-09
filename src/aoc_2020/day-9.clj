@@ -1,14 +1,14 @@
 (ns aoc-2020-9
   (:require [clojure.string :as str]))
 
-(def input (vec (map read-string (str/split (slurp "resources/input-9") #"\n"))))
+(def input (vec (map read-string (str/split (slurp "resources/bb-9") #"\n"))))
 
 (defn validate [previous current]
   (let [previous (sort previous)]
     (loop [previous previous]
       (if (empty? (rest previous))
         false
-        (let [sum (+ (first previous) (last previous))]
+        (let [sum (+' (first previous) (last previous))]
           (if (= sum current)
             true
             (if (> sum current)
@@ -24,17 +24,17 @@
           current
           (recur (rest input) (conj preamble current)))))))
 
-(find-invalid input)
+(time (find-invalid input))
 
 (defn find-weakness [input]
   (let [target (find-invalid input)
         range (conj [] (get input 0))
         index 0]
     (loop [range range index index]
-      (let [sum (apply + range)]
+      (let [sum (apply +' range)]
         (if (= sum target)
           (let [range (sort range)]
-          (+ (first range) (last range)))
+          (+' (first range) (last range)))
           (let [range (if (> sum target)
                         (vec (rest range))
                         (conj range (get input (inc index))))
@@ -43,10 +43,4 @@
                         (inc index))]
             (recur range index)))))))
           
-(find-weakness input)
-(count (subvec input 0 25))
-(last (subvec input 0 25))
-(first (subvec input 25))
-(sort (subvec input 0 25))
-
-(first input)
+(time (find-weakness input))
