@@ -1,8 +1,8 @@
 (ns aoc-2020-11
-  (:require [clojure.string :as str])
-  (:require [clojure.pprint :as pp]))
+  (:require [clojure.string :as str]))
 
-(def input (map #(str/split % #"") (str/split (slurp "resources/input-11") #"\n")))
+(def input (map #(str/split % #"")
+                (str/split (slurp "resources/input-11") #"\n")))
 
 (defn translate-grid [grid]
   (loop [grid grid new-grid []]
@@ -17,22 +17,22 @@
 (def number-grid  (translate-grid input))
 
 (defn count-neighbours [grid x y]
-  (let [addnil #(if (nil? %) 0 %)
-        look (fn [x y dx dy]
-               (loop [x x y y]
-                 (let [new-x (+ x dx)
-                       new-y (+ y dy)
-                       value (get (get grid new-y) new-x)]
-                   (if (or (> new-x (count (first grid)))
-                           (< new-x 0)
-                           (> new-y (count grid))
-                           (< new-y 0))
-                     0
-                     (if (= value 1)
-                       1
-                       (if (= value 0)
-                         0
-                         (recur new-x new-y)))))))
+  (let [look
+        (fn [x y dx dy]
+          (loop [x x y y]
+            (let [new-x (+ x dx)
+                  new-y (+ y dy)
+                  value (get (get grid new-y) new-x)]
+              (if (or (> new-x (count (first grid)))
+                      (< new-x 0)
+                      (> new-y (count grid))
+                      (< new-y 0))
+                0
+                (if (= value 1)
+                  1
+                  (if (= value 0)
+                    0
+                    (recur new-x new-y)))))))
         seen-seats {:north (look x y 0 -1)
                     :northeast (look x y 1 -1)
                     :east (look x y 1 0)
@@ -66,16 +66,21 @@
                  (assoc new-grid y (assoc (get new-grid y)  x
                                  (test grid x y)))))))))
 
-(defn simulate [grid]
+(defn simulate [grid max-iter]
   (let [nilplus #(let [arg1 (if (nil? %1) 0 %1)
                        arg2 (if (nil? %2) 0 %2)]
-                   (+ arg1 arg2))
-        max-iter 10000]
+                   (+ arg1 arg2))]
     (loop [grid grid checksum -1 iter 0]
-      (let [new-chum (do (println checksum)
-                         (reduce + (map #(reduce nilplus %) grid)))]
-        (if (or (= new-chum checksum) (>= iter max-iter)) 
+      (let [new-chum ;(do (println checksum)
+                         (reduce + (map #(reduce nilplus %) grid))]
+        (if (= new-chum checksum)
           new-chum
-          (recur (grid-step grid) new-chum (inc iter)))))))
+          (if (>= iter max-iter)
+            -1
+            (recur (grid-step grid) new-chum (inc iter))))))))
 
-(simulate number-grid)
+(time (simulate number-grid 10))
+
+(def bigboy (map #(str/split % #"")
+                (str/split (slurp "resources/bb-11") #"\n")))
+(time (grid-step (translate-grid bigboy)))

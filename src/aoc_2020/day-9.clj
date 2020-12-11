@@ -25,6 +25,9 @@
           (recur (rest input) (conj preamble current)))))))
 
 (time (find-invalid input))
+;; => 6609672557935966302174909N
+;;"Elapsed time: 7552.612856 msecs"
+
 
 (defn find-weakness [input]
   (let [target (find-invalid input)
@@ -44,3 +47,6 @@
             (recur range index)))))))
           
 (time (find-weakness input))
+;; => 13219345115871932604349818N
+;;"Elapsed time: 7684.711264 msecs"
+
